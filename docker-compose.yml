@@ -1,0 +1,38 @@
+version: "3.4"
+
+services:
+ 
+  erp.account:
+   image: erpapp.azurecr.io/erpaccount:${TAG}
+   build:
+    context: .
+    dockerfile: src/Account_Erp/Dockerfile
+   environment:
+       - ASPNETCORE_ENVIRONMENT=QA
+       - ConnectionStrings__Default=Server=tcp:rezumii.database.windows.net,1433;Initial Catalog=erp-database;Persist Security Info=False;User ID=rezumiis;Password=Rezumii1245;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+       - ConnectionStrings__Redis=erp-prod.redis.cache.windows.net:6380,password=bvDsVez3vmTn64aDDIzwBQnqxLQcfgoKBAzCaGxxYEw=,ssl=True,abortConnect=False
+
+  erp.hr:
+    image: erpapp.azurecr.io/erphr:${TAG}
+    ports:
+      - 8001:8001
+    build:
+      context: .
+      dockerfile: src/Erp.Hr/Dockerfile
+    environment:
+       - ASPNETCORE_ENVIRONMENT=QA
+       - ConnectionStrings__Default=Server=tcp:rezumii.database.windows.net,1433;Initial Catalog=erp-database;Persist Security Info=False;User ID=rezumiis;Password=Rezumii1245;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+       - ConnectionStrings__Redis=erp-prod.redis.cache.windows.net:6380,password=bvDsVez3vmTn64aDDIzwBQnqxLQcfgoKBAzCaGxxYEw=,ssl=True,abortConnect=False
+
+  erp.auth:
+    image: erpapp.azurecr.io/erpauth:${TAG}
+    build:
+      context: .
+      dockerfile: src/Erp.Auth/Dockerfile
+    environment:
+       - ASPNETCORE_ENVIRONMENT=QA
+       - ConnectionStrings__Default=ConnectionStrings__Default=Server=tcp:rezumii.database.windows.net,1433;Initial Catalog=erp-database;Persist Security Info=False;User ID=rezumiis;Password=Rezumii1245;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;
+       - FileCertificate__Password=Lk9d2MeSN4qafFUm8zQB
+       - ConnectionStrings__Redis=erp-prod.redis.cache.windows.net:6380,password=bvDsVez3vmTn64aDDIzwBQnqxLQcfgoKBAzCaGxxYEw=,ssl=True,abortConnect=False
+       - Zoho__ClientId=1000.VSV6CRXRLAH75T5MLS9KV3PCZXT3ER
+       - Zoho__ClientSecret=051ee3eef9a216814ecb6a06d944fc28b4c88d7b75
